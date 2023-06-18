@@ -1,14 +1,29 @@
 import { component$ } from "@builder.io/qwik";
+import { Form } from "@builder.io/qwik-city";
+
+import {
+  useAuthSession,
+  useAuthSignin,
+  useAuthSignout,
+} from "~/routes/plugin@auth";
 
 export default component$(() => {
-    return (
-        <a
-            class="btn bg-sky-600 sm:m-2 w-full max-h-11"
-            href="https://github.com/chrisbirster/vutabase"
-            target="_blank"
-            rel="noopener"
-        >
-            Login
-        </a>
-    );
-})
+  const session = useAuthSession();
+  const signIn = useAuthSignin();
+  const signOut = useAuthSignout();
+
+  return (
+    <div class="flex my-5 mx-5">
+      <div class="flex-grow"></div>
+      {session.value?.user?.email ? (
+        <Form action={signOut}>
+          <button>Sign Out</button>
+        </Form>
+      ) : (
+        <Form action={signIn}>
+          <button>Sign In</button>
+        </Form>
+      )}
+    </div>
+  );
+});
