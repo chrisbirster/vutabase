@@ -1,6 +1,6 @@
-# 💠 Qwind
+# 💠 Vutabase
 
-**Qwind** is a free and open-source template to make your website using **[Qwik](https://qwik.builder.io/) + [Tailwind CSS](https://tailwindcss.com/)**. Ready to start a new project and designed taking into account best practices.
+**Vutabase** is a free and open-source research framework using **[Qwik](https://qwik.builder.io/) + [Tailwind CSS](https://tailwindcss.com/)**. Ready to start a new project and designed taking into account best practices.
 
 ## Features
 
@@ -8,31 +8,25 @@
 - ✅ **Production-ready** scores in [Lighthouse](https://web.dev/measure/) and [PageSpeed Insights](https://pagespeed.web.dev/) reports.
 - ✅ **Image optimization** and **Font optimization**.
 
-<br>
-
-<img src="./screenshot.jpg" alt="Qwind Theme Screenshot">
-
-[![onWidget](https://custom-icon-badges.demolab.com/badge/made%20by%20-onWidget-556bf2?style=flat-square&logo=onwidget&logoColor=white&labelColor=101827)](https://onwidget.com)
-[![License](https://img.shields.io/github/license/onwidget/qwind?style=flat-square&color=dddddd&labelColor=000000)](https://github.com/onwidget/qwind/blob/main/LICENSE.md)
-[![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen.svg?style=flat-square)](https://github.com/onwidget)
-[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](https://github.com/onwidget/qwind#contributing)
-[![Known Vulnerabilities](https://snyk.io/test/github/onwidget/qwind/badge.svg?style=flat-square)](https://snyk.io/test/github/onwidget/qwind)
-
-<br>
-
 <details open>
 <summary>Table of Contents</summary>
 
-- [Demo](#demo)
-- [Getting started](#getting-started)
-  - [Project structure](#project-structure)
-  - [Commands](#commands)
-  - [Configuration](#configuration)
-  - [Deploy](#deploy)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [Acknowledgements](#acknowledgements)
-- [License](#license)
+- [💠 Vutabase](#-vutabase)
+  - [Features](#features)
+  - [Demo](#demo)
+  - [Getting started](#getting-started)
+    - [Project structure](#project-structure)
+    - [Commands](#commands)
+    - [Configuration](#configuration)
+    - [Deploy](#deploy)
+      - [Deploy to production (manual)](#deploy-to-production-manual)
+      - [Deploy to Netlify](#deploy-to-netlify)
+      - [Deploy to Vercel](#deploy-to-vercel)
+  - [Roadmap](#roadmap)
+    - [Base](#base)
+    - [Advanced](#advanced)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 </details>
 
@@ -40,7 +34,7 @@
 
 ## Demo
 
-📌 [https://qwind.pages.dev/](https://qwind.pages.dev/)
+📌 [https://vutabase.com/](https://vutabase.com/)
 
 <br>
 
@@ -50,7 +44,7 @@ This project is using Qwik with [QwikCity](https://qwik.builder.io/qwikcity/over
 
 ### Project structure
 
-Inside **Qwind** template, you'll see the following folders and files:
+Inside **Vutabase** project, you'll see the following folders and files:
 
 ```
 /
@@ -99,7 +93,7 @@ Inside **Qwind** template, you'll see the following folders and files:
 
 - `public`: Any static assets, like images, can be placed in the public directory. Please see the [Vite public directory](https://vitejs.dev/guide/assets.html#the-public-directory) for more info.
 
-[![Edit Qwind on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://githubbox.com/onwidget/qwind/tree/main)
+[![Edit Vutabase on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://githubbox.com/chrisbirster/vutabase/tree/main)
 
 > **Seasoned qwik expert?** Delete this file. Update `config.mjs` and contents. Have fun!
 
@@ -155,13 +149,9 @@ prefer.
 
 Clone this repository on own GitHub account and deploy to Netlify:
 
-[![Netlify Deploy button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/onwidget/qwind)
+[![Netlify Deploy button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/chrisbirster/vutabase)
 
 #### Deploy to Vercel
-
-Clone this repository on own GitHub account and deploy to Vercel:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fonwidget%2Fqwind)
 
 <br>
 
@@ -190,10 +180,6 @@ Clone this repository on own GitHub account and deploy to Vercel:
 If you have any idea, suggestions or find any bugs, feel free to open a discussion, an issue or create a pull request.
 That would be very useful for all of us and we would be happy to listen and take action.
 
-## Acknowledgements
-
-Initially created by [onWidget](https://onwidget.com) and maintained by a community of [contributors](https://github.com/onwidget/qwind/graphs/contributors).
-
 ## License
 
-**Qwind** is licensed under the MIT license — see the [LICENSE](https://github.com/onwidget/qwind/blob/main/LICENSE.md) file for details.
+**Vutabase** is licensed under the MIT license — see the [LICENSE](https://github.com/chrisbirster/vutabase/blob/main/LICENSE.md) file for details.

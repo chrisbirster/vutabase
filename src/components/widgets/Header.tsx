@@ -4,6 +4,7 @@ import { useContent } from "@builder.io/qwik-city";
 import Logo from "~/components/common/Logo";
 import ToggleTheme from "~/components/common/ToggleTheme";
 import ToggleMenu from "~/components/common/ToggleMenu";
+import GithubStar from "../common/GithubStar";
 
 export default component$(() => {
   const store = useStore({
@@ -82,13 +83,7 @@ export default component$(() => {
 
           <div class="hidden items-center md:flex">
             <ToggleTheme iconClass="w-6 h-6" />
-            <a
-              href="https://github.com/onwidget/qwind"
-              aria-label="Qwind Github"
-              class="ml-3 btn btn-primary w-full h-10 px-5 shadow-none text-base"
-            >
-              Download
-            </a>
+            <GithubStar />
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@ export default component$(() => {
         { title: "Partners", href: "#" },
         { title: "Atom", href: "#" },
         { title: "Electron", href: "#" },
-        { title: "Qwind Desktop", href: "#" },
+        { title: "Vutabase Desktop", href: "#" },
       ],
     },
     {
@@ -61,7 +61,7 @@ export default component$(() => {
     {
       label: "Github",
       icon: IconGithub,
-      href: "https://github.com/onwidget/qwind",
+      href: "https://github.com/chrisbirster/vutabase",
     },
   ];
 
@@ -72,7 +72,7 @@ export default component$(() => {
           <div class="col-span-12 lg:col-span-4 pr-8">
             <div class="mb-2">
               <Link class="inline-block font-bold text-xl" href={"/"}>
-                Qwind
+                Vutabase
               </Link>
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">
@@ -121,7 +121,7 @@ export default component$(() => {
             Made by{" "}
             <a class="text-secondary-700 hover:underline dark:text-gray-200" href="https://onwidget.com/">
               {" "}
-              onWidget
+              Vuta Labs, Inc.
             </a>{" "}
             · All rights reserved.
           </div>

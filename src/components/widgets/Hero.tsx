@@ -10,32 +10,32 @@ export default component$(() => {
         <div class="py-12 md:py-20 2xl:min-h-0 lg:flex lg:gap-8 lg:items-center lg:py-16">
           <div class="mx-auto text-center basis-1/2 lg:text-left md:pb-16 pb-12 lg:pb-0">
             <div>
-              <h1 class="text-5xl md:text-[3.48rem] font-bold leading-tighter tracking-tighter mb-4 font-heading px-4 md:px-0">
-                Free template for <br class="hidden lg:block" />{" "}
-                <span class="hidden lg:inline">create a website using </span> <span class="text-[#039de1]">Qwik</span> +{" "}
-                <span class="sm:whitespace-nowrap text-[#039de1]">Tailwind CSS</span>
+              <h1 class="text-center text-4xl font-bold tracking-tight text-white sm:text-6xl sm:tracking-tight lg:text-[4rem] xl:text-[6rem] xl:tracking-tight 2xl:text-[6.5rem]">Plan,
+                <span class="text-[hsl(200,100%,60%)]">{" "}Create,</span>
+                <span class="whitespace-nowrap text-[hsl(240,100%,70%)]">{" "}Share</span>
+                <span class="text-[hsl(280,100%,60%)] ">{" "}Vutabase</span>
               </h1>
               <div class="max-w-3xl mx-auto">
                 <p class="text-xl text-gray-600 mb-8 dark:text-slate-400">
                   <span class="font-semibold underline decoration-wavy decoration-1 decoration-secondary-600 underline-offset-2">
-                    Qwind
+                    Vutabase
                   </span>{" "}
-                  is a production ready template to start your new website using <em>Qwik</em> + <em>Tailwind CSS</em>.
-                  It has been designed following Best Practices, SEO, Accessibility,{" "}
-                  <span class="inline md:hidden">...</span>
-                  <span class="hidden md:inline">
-                    Dark Mode, Great Page Speed, image optimization, sitemap generation and more.
-                  </span>
+                  is a production ready <b>research-first</b> framework. We've built it to be flexible and extensible, so you can focus on your content.
+                </p>
+                <p class="text-xl text-gray-600 mb-8 dark:text-slate-400">
+                  Vutabase gives you the freedom to write, cite, and collaborate in the
+                  way that works best for you. We don't force you to use a specific
+                  citation style, or a specific way of organizing your content.
                 </p>
                 <div class="flex flex-col flex-nowrap gap-4 m-auto max-w-xs sm:flex-row sm:justify-center sm:max-w-md lg:justify-start lg:m-0 lg:max-w-7xl">
                   <div class="flex w-full sm:w-auto">
                     <a
                       class="btn btn-primary sm:mb-0 w-full"
-                      href="https://github.com/onwidget/qwind"
+                      href="https://github.com/chrisbirster/vutabase"
                       target="_blank"
                       rel="noopener"
                     >
-                      Get template
+                      Try it out
                     </a>
                   </div>
                   <div class="flex w-full sm:w-auto">
@@ -52,7 +52,7 @@ export default component$(() => {
                 layout="constrained"
                 width={493}
                 height={616}
-                alt="Qwind Hero Image (Cool dog)"
+                alt="Vutabase Hero Image (Cool dog)"
                 class="mx-auto lg:mr-0 w-full drop-shadow-2xl rounded-md"
                 breakpoints={[320, 480, 640, 1024]}
               />

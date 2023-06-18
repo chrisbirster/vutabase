@@ -1,12 +1,12 @@
 export const SITE = {
-  name: "Qwind",
+  name: "Vutabase",
 
   title:
-    "Qwind — Free template for Qwik + Tailwind CSS to build your new website.",
+    "Vutabase — The framework for creatives by creatives",
   description:
-    "Qwind is a free and ready to start template to make your website using Qwik and Tailwind CSS.",
+    "A framework for researchers, designers, and developers to create and share interactive content.",
 
-  origin: "https://qwind.pages.dev",
+  origin: "https://vutabase.com",
   basePathname: "/",
   trailingSlash: true,
 };
