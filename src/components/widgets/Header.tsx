@@ -5,6 +5,7 @@ import Logo from "~/components/common/Logo";
 import ToggleTheme from "~/components/common/ToggleTheme";
 import ToggleMenu from "~/components/common/ToggleMenu";
 import GithubStar from "../common/GithubStar";
+import LoginButton from "../common/LoginButton";
 
 export default component$(() => {
   const store = useStore({
@@ -15,13 +16,12 @@ export default component$(() => {
 
   return (
     <header
-      class={`sticky top-0 z-40 flex-none mx-auto w-full transition-all${
-        store.isScrolling
+      class={`sticky top-0 z-40 flex-none mx-auto w-full transition-all${store.isScrolling
           ? " md:bg-white/90 md:backdrop-blur-sm dark:md:bg-slate-900/90 bg-white dark:bg-slate-900"
           : ""
-      }`}
+        }`}
       id="header"
-      window:onScroll$={() => {
+      window: onScroll$={() => {
         if (!store.isScrolling && window.scrollY >= 10) {
           store.isScrolling = true;
         } else if (store.isScrolling && window.scrollY < 10) {
@@ -84,9 +84,11 @@ export default component$(() => {
           <div class="hidden items-center md:flex">
             <ToggleTheme iconClass="w-6 h-6" />
             <GithubStar />
+            <LoginButton />
           </div>
         </div>
       </div>
     </header>
   );
 });
+
