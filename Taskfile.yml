@@ -1,0 +1,315 @@
+version: '3'
+
+tasks:
+  env:init:local:
+    desc: Create a local SQLite env file with sane defaults
+    cmds:
+      - bash ./scripts/env/init-local.sh "${ENV_FILE:-.env.local}"
+
+  env:hydrate:turso:
+    desc: Populate an env file with Turso URL/token and remote app origins
+    cmds:
+      - bash ./scripts/env/hydrate-turso.sh "${ENV_FILE:-.env.production}" "${TURSO_DB:?set TURSO_DB}" "${APP_ORIGIN:-https://app.starter-template.example.com}" "${APP_MARKETING_ORIGIN:-https://starter-template.example.com}" "${APP_ENV:-production}"
+
+  env:hydrate:production:
+    desc: Populate .env.production with Turso URL/token and production origins
+    cmds:
+      - bash ./scripts/env/hydrate-turso.sh ".env.production" "${TURSO_DB:?set TURSO_DB}" "https://app.starter-template.example.com" "https://starter-template.example.com" "production"
+
+  secrets:fly:import:
+    desc: Push APP_* values from an env file into Fly secrets
+    cmds:
+      - bash ./scripts/env/fly-secrets-import.sh "${ENV_FILE:?set ENV_FILE}" "${FLY_APP:-starter-app}"
+
+  stripe:billing:bootstrap:
+    desc: Create or find the Stripe subscription product and monthly prices, then write price IDs into ENV_FILE
+    cmds:
+      - |
+        ENV_FILE="${ENV_FILE:-.env.production}"
+        if [ -f "$ENV_FILE" ]; then
+          set -a
+          . "$ENV_FILE"
+          set +a
+        fi
+        python3 ./scripts/stripe/bootstrap_billing.py --env-file "$ENV_FILE"
+
+  stripe:billing:listen:
+    desc: Forward Stripe billing webhook events to the local backend
+    cmds:
+      - stripe listen --events checkout.session.completed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted --forward-to "${BILLING_WEBHOOK_FORWARD_URL:-http://localhost:8000/api/billing/webhook}"
+
+  _ports:check:sqlite:
+    internal: true
+    desc: Ensure local sqlite dev ports are available
+    cmds:
+      - |
+        for port in 3000 4173 8000; do
+          listeners="$(lsof -iTCP:$port -sTCP:LISTEN -n -P 2>/dev/null || true)"
+          if [ -n "$listeners" ]; then
+            echo "Port $port is already in use."
+            echo "$listeners"
+            exit 1
+          fi
+        done
+        exit 0
+
+  _ports:check:sqlite:app:
+    internal: true
+    desc: Ensure local sqlite app ports are available
+    cmds:
+      - |
+        for port in 3000 8000; do
+          listeners="$(lsof -iTCP:$port -sTCP:LISTEN -n -P 2>/dev/null || true)"
+          if [ -n "$listeners" ]; then
+            echo "Port $port is already in use."
+            echo "$listeners"
+            exit 1
+          fi
+        done
+        exit 0
+
+  bootstrap:
+    desc: Install Bun dependencies for web, marketing, and infra
+    cmds:
+      - cd web && bun install
+      - cd marketing && bun install
+      - cd infra && bun install
+      - cd infra && bunx sst install
+
+  app:dev:
+    desc: Run the Go app locally against ./data/app.db
+    cmds:
+      - |
+        ENV_FILE="${ENV_FILE:-.env}"
+        if [ -f "$ENV_FILE" ]; then
+          set -a
+          . "$ENV_FILE"
+          set +a
+        elif [ -f ./.env ]; then
+          set -a
+          . ./.env
+          set +a
+        fi
+        env APP_DATABASE_URL= APP_DATABASE_AUTH_TOKEN= go run .
+
+  web:dev:
+    desc: Run the embedded app shell at http://localhost:3000
+    cmds:
+      - |
+        ENV_FILE="${ENV_FILE:-.env}"
+        if [ -f "$ENV_FILE" ]; then
+          set -a
+          . "$ENV_FILE"
+          set +a
+        elif [ -f ./.env ]; then
+          set -a
+          . ./.env
+          set +a
+        fi
+        cd web && bun run dev
+
+  marketing:dev:
+    desc: Run the marketing site at http://localhost:4173
+    cmds:
+      - |
+        ENV_FILE="${ENV_FILE:-.env}"
+        if [ -f "$ENV_FILE" ]; then
+          set -a
+          . "$ENV_FILE"
+          set +a
+        elif [ -f ./.env ]; then
+          set -a
+          . ./.env
+          set +a
+        fi
+        cd marketing && bun run dev
+
+  dev:sqlite:app:
+    desc: Run the Go app and app frontend locally against SQLite
+    cmds:
+      - task: _ports:check:sqlite:app
+      - task: build:app-web
+      - |
+        ENV_FILE="${ENV_FILE:-.env}"
+        if [ -f "$ENV_FILE" ]; then
+          set -a
+          . "$ENV_FILE"
+          set +a
+        elif [ -f ./.env ]; then
+          set -a
+          . ./.env
+          set +a
+        fi
+        trap 'kill 0' EXIT
+        env APP_DATABASE_URL= APP_DATABASE_AUTH_TOKEN= go run . &
+        (cd web && bun run dev) &
+        wait
+
+  dev:sqlite:
+    desc: Run backend, app frontend, and marketing locally against SQLite
+    cmds:
+      - task: _ports:check:sqlite
+      - task: build:app-web
+      - |
+        ENV_FILE="${ENV_FILE:-.env}"
+        if [ -f "$ENV_FILE" ]; then
+          set -a
+          . "$ENV_FILE"
+          set +a
+        elif [ -f ./.env ]; then
+          set -a
+          . ./.env
+          set +a
+        fi
+        trap 'kill 0' EXIT
+        env APP_DATABASE_URL= APP_DATABASE_AUTH_TOKEN= go run . &
+        (cd web && bun run dev) &
+        (cd marketing && bun run dev) &
+        wait
+
+  dev:turso:app:
+    desc: Run the Go app and app frontend locally against Turso using ENV_FILE (defaults to .env.production)
+    cmds:
+      - task: _ports:check:sqlite:app
+      - task: build:app-web
+      - |
+        ENV_FILE="${ENV_FILE:-.env.production}"
+        if [ ! -f "$ENV_FILE" ]; then
+          echo "Env file not found: $ENV_FILE"
+          exit 1
+        fi
+        set -a
+        . "$ENV_FILE"
+        set +a
+        trap 'kill 0' EXIT
+        go run . &
+        (cd web && bun run dev) &
+        wait
+
+  dev:turso:
+    desc: Run backend, app frontend, and marketing locally against Turso using ENV_FILE (defaults to .env.production)
+    cmds:
+      - task: _ports:check:sqlite
+      - task: build:app-web
+      - |
+        ENV_FILE="${ENV_FILE:-.env.production}"
+        if [ ! -f "$ENV_FILE" ]; then
+          echo "Env file not found: $ENV_FILE"
+          exit 1
+        fi
+        set -a
+        . "$ENV_FILE"
+        set +a
+        trap 'kill 0' EXIT
+        go run . &
+        (cd web && bun run dev) &
+        (cd marketing && bun run dev) &
+        wait
+
+  dev:
+    desc: Run backend plus app frontend against SQLite
+    cmds:
+      - task: dev:sqlite:app
+
+  dev:full:
+    desc: Run backend, app frontend, and marketing frontend against SQLite
+    cmds:
+      - task: dev:sqlite
+
+  build:app-web:
+    desc: Build the embedded web app into web/dist
+    cmds:
+      - cd web && bun run build
+
+  build:marketing:
+    desc: Build the marketing site into marketing/dist
+    cmds:
+      - cd marketing && bun run build
+
+  build:server:
+    desc: Build the Go server binary with embedded web assets
+    deps: [build:app-web]
+    cmds:
+      - go build -o bin/starter-app .
+
+  build:
+    desc: Build marketing, embedded app web assets, and server
+    deps: [build:marketing, build:server]
+
+  test:go:
+    desc: Run Go tests
+    cmds:
+      - go test ./...
+
+  test:web:
+    desc: Run web unit tests
+    cmds:
+      - cd web && bun run test:unit
+
+  test:marketing:
+    desc: Run marketing site unit tests
+    cmds:
+      - cd marketing && bun run test
+
+  test:
+    desc: Run Go, web, and marketing tests
+    deps: [test:go, test:web, test:marketing]
+
+  debug:session:
+    desc: Call the session endpoint with a cookie jar for local debugging
+    cmds:
+      - |
+        ENV_FILE="${ENV_FILE:-.env}"
+        if [ -f "$ENV_FILE" ]; then
+          set -a
+          . "$ENV_FILE"
+          set +a
+        elif [ -f ./.env ]; then
+          set -a
+          . ./.env
+          set +a
+        fi
+        mkdir -p .tasktmp
+        curl -i --cookie-jar .tasktmp/session.cookies "${APP_ORIGIN:-http://localhost:8000}/api/auth/session"
+
+  deploy:fly:
+    desc: Deploy the app server to Fly.io
+    cmds:
+      - fly deploy --remote-only --app ${FLY_APP:-starter-app}
+
+  deploy:fly:sync:
+    desc: Import Fly secrets from ENV_FILE and deploy the app server
+    cmds:
+      - task: secrets:fly:import
+      - task: deploy:fly
+
+  deploy:infra:
+    desc: Deploy the SST infra stack using ENV_FILE (defaults to .env.production)
+    cmds:
+      - |
+        ENV_FILE="${ENV_FILE:-.env.production}"
+        if [ ! -f "$ENV_FILE" ]; then
+          echo "Env file not found: $ENV_FILE"
+          exit 1
+        fi
+        set -a
+        . "$ENV_FILE"
+        set +a
+        cd infra
+        bunx sst deploy --stage "${SST_STAGE:-production}"
+
+  deploy:email:
+    desc: Deploy the email/SST infra using ENV_FILE (defaults to .env.production)
+    cmds:
+      - task: deploy:infra
+
+  deploy:marketing:
+    desc: Deploy the marketing site via SST using ENV_FILE (defaults to .env.production)
+    cmds:
+      - task: deploy:infra
+
+  deploy:
+    desc: Deploy Fly app and marketing site
+    cmds:
+      - task: deploy:fly
+      - task: deploy:marketing
